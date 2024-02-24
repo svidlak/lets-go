@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -21,26 +20,11 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	for _, snippet := range snippets {
-		fmt.Fprintf(w, "%+v\n", snippet)
-	}
 
-	// files := []string{
-	// 	"./ui/html/base.tmpl.html",
-	// 	"./ui/html/components/nav.tmpl.html",
-	// 	"./ui/html/pages/home.tmpl.html",
-	// }
+	templateData := app.initTemplateData(r)
+	templateData.Snippets = snippets
 
-	// ts, err := template.ParseFiles(files...)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// 	return
-	// }
-
-	// err = ts.ExecuteTemplate(w, "base", nil)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// }
+	app.render(w, "home", templateData)
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +35,7 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rawSnippet, err := app.snippets.Get(id)
+	snippet, err := app.snippets.Get(id)
 
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
@@ -62,14 +46,10 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	snippet, err := json.Marshal(rawSnippet)
+	templateData := app.initTemplateData(r)
+	templateData.Snippet = snippet
 
-	if err != nil {
-		app.serverError(w, err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(snippet)
+	app.render(w, "view", templateData)
 }
 
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {

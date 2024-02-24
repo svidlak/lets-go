@@ -17,10 +17,6 @@ type config struct {
 	dsn       string
 }
 
-type neuteredFileSystem struct {
-	fs http.FileSystem
-}
-
 var cfg config
 
 type application struct {

@@ -5,6 +5,10 @@ import (
 	"path/filepath"
 )
 
+type neuteredFileSystem struct {
+	fs http.FileSystem
+}
+
 func (app *application) routes() *http.ServeMux {
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(neuteredFileSystem{http.Dir(cfg.staticDir)})

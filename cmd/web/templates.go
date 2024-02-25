@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"net/http"
 	"path/filepath"
 	"time"
 
@@ -13,6 +14,7 @@ type templateData struct {
 	Snippets    []*models.Snippet
 	CurrentYear int
 	Form        snippetCreateForm
+	Flash       string
 }
 
 func humanDate(t time.Time) string {
@@ -53,4 +55,11 @@ func cacheTemplates() (map[string]*template.Template, error) {
 	}
 
 	return cache, nil
+}
+
+func (app *application) initTemplateData(r *http.Request) *templateData {
+	return &templateData{
+		CurrentYear: time.Now().Year(),
+		Flash:       app.sessionManager.PopString(r.Context(), "flash"),
+	}
 }

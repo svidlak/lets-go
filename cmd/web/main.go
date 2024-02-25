@@ -17,9 +17,8 @@ import (
 )
 
 type config struct {
-	port      string
-	staticDir string
-	dsn       string
+	port string
+	dsn  string
 }
 
 var cfg config
@@ -35,7 +34,6 @@ type application struct {
 
 func main() {
 	flag.StringVar(&cfg.port, "port", ":4000", "HTTP Port")
-	flag.StringVar(&cfg.staticDir, "staticDir", "./ui/static/", "Static assets directory")
 	flag.StringVar(&cfg.dsn, "dsn", "web:114477@/snippetbox?parseTime=true", "MySQL data source name")
 	flag.Parse()
 

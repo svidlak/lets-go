@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/svidlak/lets-go/internal/models"
@@ -121,7 +120,7 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := app.users.Authenticate(form.Email, form.Password)
+	user, err := app.users.Authenticate(form.Email, form.Password)
 
 	if err != nil {
 		if errors.Is(err, models.ErrInvalidCredentials) {
@@ -142,10 +141,21 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.sessionManager.Put(r.Context(), "authenticatedUserID", id)
+	app.sessionManager.Put(r.Context(), "authenticatedUserID", user.ID)
+	app.sessionManager.Put(r.Context(), "UserName", user.Name)
+
 	http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
 }
 
 func (app *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Logout the user...")
+	err := app.sessionManager.RenewToken(r.Context())
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.sessionManager.Remove(r.Context(), "authenticatedUserID")
+
+	app.sessionManager.Put(r.Context(), "flash", "You've been logged out successfully!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

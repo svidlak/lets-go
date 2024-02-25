@@ -39,3 +39,7 @@ func (app *application) render(w http.ResponseWriter, page string, data *templat
 	}
 	buf.WriteTo(w)
 }
+
+func (app *application) isAuthenticated(r *http.Request) bool {
+	return app.sessionManager.Exists(r.Context(), "authenticatedUserID")
+}

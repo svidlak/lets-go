@@ -11,3 +11,5 @@ require (
 )
 
 require golang.org/x/crypto v0.19.0
+
+require github.com/justinas/nosurf v1.1.1

@@ -6,15 +6,19 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/justinas/nosurf"
 	"github.com/svidlak/lets-go/internal/models"
 )
 
 type templateData struct {
-	Snippet     *models.Snippet
-	Snippets    []*models.Snippet
-	CurrentYear int
-	Form        any
-	Flash       string
+	Snippet         *models.Snippet
+	Snippets        []*models.Snippet
+	CurrentYear     int
+	Form            any
+	Flash           string
+	IsAuthenticated bool
+	CSRFToken       string
+	UserName        string
 }
 
 func humanDate(t time.Time) string {
@@ -59,7 +63,10 @@ func cacheTemplates() (map[string]*template.Template, error) {
 
 func (app *application) initTemplateData(r *http.Request) *templateData {
 	return &templateData{
-		CurrentYear: time.Now().Year(),
-		Flash:       app.sessionManager.PopString(r.Context(), "flash"),
+		CurrentYear:     time.Now().Year(),
+		Flash:           app.sessionManager.PopString(r.Context(), "flash"),
+		IsAuthenticated: app.isAuthenticated(r),
+		CSRFToken:       nosurf.Token(r),
+		UserName:        app.sessionManager.GetString(r.Context(), "UserName"),
 	}
 }

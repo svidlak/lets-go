@@ -49,18 +49,28 @@ func (m *UserModel) Insert(name, email, password string) error {
 }
 
 func (m *UserModel) Authenticate(email, password string) (int, error) {
-	stmt := `SELECT id FROM users WHERE email = ? AND hashed_password = ?`
+	stmt := `SELECT id, hashed_password FROM users WHERE email = ?`
 
 	u := &User{}
 
-	err := m.DB.QueryRow(stmt, email, password).Scan(&u.ID)
+	err := m.DB.QueryRow(stmt, email).Scan(&u.ID, &u.HashedPassword)
 
 	if err != nil {
-		return 0, ErrInvalidCredentials
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
 	}
 
-	if u.ID < 1 {
-		return 0, ErrNoRecord
+	err = bcrypt.CompareHashAndPassword([]byte(u.HashedPassword), []byte(password))
+
+	if err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return 0, ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
 	}
 
 	return u.ID, nil

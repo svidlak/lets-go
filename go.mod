@@ -10,4 +10,4 @@ require (
 	github.com/justinas/alice v1.2.0
 )
 
-require golang.org/x/crypto v0.19.0 // indirect
+require golang.org/x/crypto v0.19.0

@@ -17,7 +17,7 @@ func (app *application) routes() http.Handler {
 	fileServer := http.FileServer(http.Dir(cfg.staticDir))
 	router.Handler(http.MethodGet, "/static/*filepath", http.StripPrefix("/static", fileServer))
 
-	publicRoutes := alice.New(app.sessionManager.LoadAndSave, noSurf)
+	publicRoutes := alice.New(app.sessionManager.LoadAndSave, noSurf, app.authenticate)
 
 	router.Handler(http.MethodGet, "/", publicRoutes.ThenFunc(app.home))
 	router.Handler(http.MethodGet, "/snippet/view/:id", publicRoutes.ThenFunc(app.snippetView))

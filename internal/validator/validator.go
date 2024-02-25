@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"net/mail"
 	"strings"
 	"unicode/utf8"
 )
@@ -44,4 +45,9 @@ func PermittedInt(value int, permittedValues ...int) bool {
 		}
 	}
 	return false
+}
+
+func ValidEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
 }

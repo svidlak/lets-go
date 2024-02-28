@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"testing"
 
@@ -39,7 +38,6 @@ func TestHome(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 
 			statusCode, _, body := ts.get(t, tt.urlPath)
-			log.Print("body: " + body)
 
 			assert.Equal(t, statusCode, tt.wantCode)
 			if tt.wantBody != "" {
@@ -98,7 +96,6 @@ func TestSnippetView(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 
 			statusCode, _, body := ts.get(t, tt.urlPath)
-			log.Print("body: " + body)
 
 			assert.Equal(t, statusCode, tt.wantCode)
 			if tt.wantBody != "" {

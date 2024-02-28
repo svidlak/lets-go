@@ -22,6 +22,12 @@ type UserModel struct {
 	DB *sql.DB
 }
 
+type UserModelInterface interface {
+	Insert(name, email, password string) error
+	Authenticate(email, password string) (*User, error)
+	Exists(id int) (bool, error)
+}
+
 func (m *UserModel) Insert(name, email, password string) error {
 	HashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 

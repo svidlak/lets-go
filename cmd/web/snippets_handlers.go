@@ -28,7 +28,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	templateData := app.initTemplateData(r)
 	templateData.Snippets = snippets
 
-	app.render(w, "home", templateData)
+	app.render(w, http.StatusOK, "home", templateData)
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,7 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	templateData := app.initTemplateData(r)
 	templateData.Snippet = snippet
 
-	app.render(w, "view", templateData)
+	app.render(w, http.StatusOK, "view", templateData)
 }
 
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +85,7 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	if !form.Valid() {
 		data := app.initTemplateData(r)
 		data.Form = form
-		app.render(w, "create", data)
+		app.render(w, http.StatusUnprocessableEntity, "create", data)
 		return
 	}
 
@@ -103,5 +103,5 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	templateData := app.initTemplateData(r)
 	templateData.Form = snippetCreateForm{Expires: 365}
 
-	app.render(w, "create", templateData)
+	app.render(w, http.StatusOK, "create", templateData)
 }

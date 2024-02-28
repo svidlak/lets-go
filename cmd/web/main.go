@@ -26,8 +26,8 @@ var cfg config
 type application struct {
 	errorLog       *log.Logger
 	infoLog        *log.Logger
-	snippets       *models.SnippetModel
-	users          *models.UserModel
+	snippets       models.SnippetModelInterface
+	users          models.UserModelInterface
 	templates      map[string]*template.Template
 	sessionManager *scs.SessionManager
 }

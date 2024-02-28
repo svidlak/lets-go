@@ -25,7 +25,7 @@ func (app *application) userSignup(w http.ResponseWriter, r *http.Request) {
 	templateData := app.initTemplateData(r)
 	templateData.Form = userSignupForm{}
 
-	app.render(w, "signup", templateData)
+	app.render(w, http.StatusOK, "signup", templateData)
 }
 
 func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +60,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		data := app.initTemplateData(r)
 		data.Form = form
 
-		app.render(w, "signup", data)
+		app.render(w, http.StatusUnprocessableEntity, "signup", data)
 		return
 	}
 
@@ -73,7 +73,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 			templateData := app.initTemplateData(r)
 			templateData.Form = form
 
-			app.render(w, "signup", templateData)
+			app.render(w, http.StatusUnprocessableEntity, "signup", templateData)
 		} else {
 			app.serverError(w, err)
 		}
@@ -88,7 +88,7 @@ func (app *application) userLogin(w http.ResponseWriter, r *http.Request) {
 	templateData := app.initTemplateData(r)
 	templateData.Form = userLoginForm{}
 
-	app.render(w, "login", templateData)
+	app.render(w, http.StatusOK, "login", templateData)
 }
 
 func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
@@ -116,7 +116,7 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 		data := app.initTemplateData(r)
 		data.Form = form
 
-		app.render(w, "login", data)
+		app.render(w, http.StatusUnprocessableEntity, "login", data)
 		return
 	}
 
@@ -128,7 +128,7 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 			data := app.initTemplateData(r)
 			data.Form = form
 
-			app.render(w, "login", data)
+			app.render(w, http.StatusUnprocessableEntity, "login", data)
 		} else {
 			app.serverError(w, err)
 		}
